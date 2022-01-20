@@ -234,20 +234,21 @@ class AccountView():
     def create_stack():
         admin_token= AccountView.token()
         stack_name= input("stack 이름 입력 : ")
-        openstack_stack_payload = {
-            {
+        key_name= input("key 이름 입력 : ")
+        server_name= input("server 이름 입력 : ")
+        openstack_stack_payload ={
                 "files": {},
-                "disable_rollback": true,
+                "disable_rollback": "true",
                 "parameters": {
                     "flavor": "m1.tiny",
-                    "demo_net_cidr": "10.10.30.0/24",
-                    "demo_net_gateway": "10.10.30.1",
-                    "demo_net_pool_end" : "10.10.30.200",
-                    "demo_net_pool_start" : "10.10.30.10",
+                    "demo_net_cidr": "172.24.4.0/24",
+                    "demo_net_gateway": "172.24.4.1",
+                    "demo_net_pool_end" : "172.24.4.200",
+                    "demo_net_pool_start" : "172.24.4.10",
                     "image_name": "cirros-0.5.2-x86_64-disk",
-                    "key_name":"test-bong",
-                    "net_name":"poc-net",
-                    "server_name":"heat01",
+                    "key_name": key_name,
+                    "net_name":"public",
+                    "server_name":server_name,
                     "zone_server":"nova"
                         },
                 "stack_name": stack_name,
@@ -256,7 +257,7 @@ class AccountView():
                     "description": "Simple template to test heat commands",
                     "parameters": {
                         "flavor": {
-                            "default": "m1.tiny",
+                            "default": "ds512M",
                             "type": "string"
                         },
                     "demo_net_cidr": {"type": "string"},
@@ -276,40 +277,43 @@ class AccountView():
                                 "name":
                                     {"get_param" : "key_name"}
                             }
-                        },
-                        "demo_net":{
-                            "properties":{
-                            "name":{
-                                    "get_param": "net_name"
-                            }},
-                            "type": "OS::Neutron::Net"
-                        },
-                        "demo_subnet": {
-                            "properties":{
-                                "allocation_pools":[{
-                                    "start":{"get_param": "demo_net_pool_start"},
-                                    "end":{"get_param": "demo_net_pool_end"}
-                                }],
-                                "cidr": {
-                                    "get_param": "demo_net_cidr"},
-                                "gateway_ip":{
-                                    "get_param": "demo_net_gateway"},
-                                "network_id":{"get_resource": "demo_net"}
-                            },
-                            "type": "OS::Neutron::Subnet"
-                        },
-                        
+                        },                       
                         "server_port":{
                             "properties":{ 
                                 "fixed_ips":[{ 
-                                    "subnet_id":{"get_resource": "demo_subnet"}}],
+                                    "subnet_id":"76adb4ba-9636-4622-9605-0aa738eee3c0"}],
                                     
-                                "network_id":{"get_resource": "demo_net"}
+                                "network_id": "138aca3d-356f-442f-ba0f-b93891518029"
                                     
                             },                   
                             "type": "OS::Neutron::Port"
                         },
-
+                        "one_init": {
+                            "type": "OS::Heat::CloudConfig",
+                            "properties": {
+                                "cloud_config": {
+                                    "bootcmd": 
+                                    [
+                                        "mkdir /home/ubuntu/bong"
+                                    ],
+                                    "chpasswd": {
+                                        "list": "ubuntu:1111\n"
+                                    }
+                                }
+                            }
+                        },
+                        "server_init": {
+                            "type": "OS::Heat::MultipartMime",
+                            "properties": {
+                                "parts": [
+                                    {
+                                        "config": {
+                                            "get_resource": "one_init"
+                                        }
+                                    }
+                                ]
+                            }
+                        },                        
                         "hello_world":{
                             "type": "OS::Nova::Server",
                             "properties":{
@@ -319,7 +323,9 @@ class AccountView():
                                 "key_name":{"get_resource": "demo_key"},
                                 "name":{"get_param": "server_name"},                        
                                 "networks": [{"port":{"get_resource": "server_port"}
-                                }]
+                                }],
+                                "user_data_format": "RAW",
+                                "user_data":{"get_resource": "server_init"}
                                 }
                             
                         }
@@ -327,10 +333,14 @@ class AccountView():
                     }
                 },
                 "timeout_mins": 60
-            }
-        }
+            }  
+        user_res = requests.post("http://"+address+"/heat-api/v1/05eb34f3739447a3b959501f260eab82/stacks",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_stack_payload))
+        print("stack생성 ",user_res)
+
 def main():
-    # d= AccountView.token()
+    #  d= AccountView.token()
     # c=AccountView.create_user()
     # f= AccountView.delete_user()
     #f=AccountView.create_instance()
@@ -338,7 +348,7 @@ def main():
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-
+    f=AccountView.create_stack()
 
 main()
 #         #openstack 사용자 생성

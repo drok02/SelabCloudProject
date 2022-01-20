@@ -115,13 +115,231 @@ class AccountView():
         # return response
     def signin():
         admin_token= AccountView.token()
-        
+    
 
+    #인스턴스 생성 
+    def create_instance():
+        admin_token= AccountView.token()
+        instacne_name=input("생성할 인스턴스 이름 입력: ")
+        # 특정 (shared) 네트워크 참조
+        network_uuid = requests.get("http://"+address+":9696/v2.0/networks?name=shared",
+            headers = {'X-Auth-Token' : admin_token}
+            ).json()["networks"][0]["id"]
+        print()
+        print("network uuid : "+network_uuid)
+        print()
+
+        #특정 img id 참조
+        img_uuid = requests.get("http://"+address+"/image/v2/images?name=cirros-0.4.0-x86_64-disk",
+            headers = {'X-Auth-Token' : admin_token}
+            ).json()["images"][0]["id"]
+
+        flavor_reference= input("flavor ref id 입력: ")
+        openstack_instance_payload = {
+            "server" : {
+                "name" : instacne_name,
+                "imageRef" : img_uuid,
+                "flavorRef" : flavor_reference,
+                "networks" : [{
+                    "uuid" : network_uuid
+                }] 
+            }   
+        }
+        #인스턴스 생성 요청
+        user_res = requests.post("http://"+address+"/compute/v2.1/servers",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_instance_payload))
+        print(user_res.json())
+
+
+    #인스턴스로부터 스냅샷 이미지 생성
+    def create_img_from_server():
+        admin_token= AccountView.token()
+        instacne_name=input("참고할 인스턴스 이름 입력: ")
+        img_name=input("생성할 이미지 이름 입력 :")
+        instance_uuid=requests.get("http://"+address+"/compute/v2.1/servers/detail?"+instacne_name,
+            headers = {'X-Auth-Token' : admin_token}
+            ).json()["servers"][0]["id"]
+
+        openstack_img_payload = {
+                "createImage" : {
+                    "name" : img_name
+                }     
+        }
+        #인스턴스 바탕으로 이미지 생성
+        user_res = requests.post("http://"+address+"/compute/v2.1/servers/"+instance_uuid+"/action",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_img_payload))
+        print("인스턴스로부터 이미지 생성 ",user_res)
+
+
+
+    # 스냅샷 생성
+    def create_snapshot():
+        admin_token= AccountView.token()
+        snp_name= input("스냅샷 이름 입력 : ")
+
+        openstack_snp_payload = {
+            "snapshot": {
+                "display_name": snp_name,
+                "display_description": "Daily backup",
+                "volume_id": "adc9a8ac-168e-4da3-af50-62f247c6b2ca"
+            } 
+        }
+        user_res = requests.post("http://"+address+"/compute/v2.1/os-snapshots",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_snp_payload)).json()
+        print("스냅샷 생성 ",user_res)
+
+
+    #볼륨 생성
+    def create_vol():
+        admin_token= AccountView.token()
+        vol_name= input("볼륨 이름 입력 : ")
+
+        openstack_vol_payload = {
+            "volume": {
+                "display_name": vol_name,
+                "display_description": "Volume Description",
+                "size": 100
+            }
+        }
+
+        user_res = requests.post("http://"+address+"/compute/v2.1/os-volumes",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_vol_payload)).json() 
+        print("볼륨생성 ",user_res)
+
+    #flavor 생성    
+    def create_flavor():
+        admin_token= AccountView.token()
+        vol_name= input("flavor 이름 입력 : ")
+        flavor_id=input("flavor id 입력: ")
+        openstack_fla_payload = {
+            "flavor": {
+                "name": vol_name,
+                "ram": 1024,
+                "vcpus": 2,
+                "disk": 10,
+                "id": flavor_id,
+                "rxtx_factor": 2.0,
+                "description": "test description"
+            }
+        }
+
+        user_res = requests.post("http://"+address+"/compute/v2/flavors",
+            headers = {'X-Auth-Token' : admin_token},
+            data = json.dumps(openstack_fla_payload)).json() 
+        print("flavor생성 ",user_res)
+    def create_stack():
+        admin_token= AccountView.token()
+        stack_name= input("stack 이름 입력 : ")
+        openstack_stack_payload = {
+            {
+                "files": {},
+                "disable_rollback": true,
+                "parameters": {
+                    "flavor": "m1.tiny",
+                    "demo_net_cidr": "10.10.30.0/24",
+                    "demo_net_gateway": "10.10.30.1",
+                    "demo_net_pool_end" : "10.10.30.200",
+                    "demo_net_pool_start" : "10.10.30.10",
+                    "image_name": "cirros-0.5.2-x86_64-disk",
+                    "key_name":"test-bong",
+                    "net_name":"poc-net",
+                    "server_name":"heat01",
+                    "zone_server":"nova"
+                        },
+                "stack_name": stack_name,
+                "template": {
+                    "heat_template_version": "2013-05-23",
+                    "description": "Simple template to test heat commands",
+                    "parameters": {
+                        "flavor": {
+                            "default": "m1.tiny",
+                            "type": "string"
+                        },
+                    "demo_net_cidr": {"type": "string"},
+                    "demo_net_gateway": {"type": "string"},
+                    "demo_net_pool_end" : {"type": "string"},
+                    "demo_net_pool_start" : {"type": "string"},
+                    "image_name": {"type": "string"},
+                    "key_name": {"type": "string"},
+                    "net_name": {"type": "string"},
+                    "server_name": {"type": "string"},
+                    "zone_server": {"type": "string"}
+                    },
+                    "resources": {
+                        "demo_key" : {
+                            "type": "OS::Nova::KeyPair",
+                            "properties": {
+                                "name":
+                                    {"get_param" : "key_name"}
+                            }
+                        },
+                        "demo_net":{
+                            "properties":{
+                            "name":{
+                                    "get_param": "net_name"
+                            }},
+                            "type": "OS::Neutron::Net"
+                        },
+                        "demo_subnet": {
+                            "properties":{
+                                "allocation_pools":[{
+                                    "start":{"get_param": "demo_net_pool_start"},
+                                    "end":{"get_param": "demo_net_pool_end"}
+                                }],
+                                "cidr": {
+                                    "get_param": "demo_net_cidr"},
+                                "gateway_ip":{
+                                    "get_param": "demo_net_gateway"},
+                                "network_id":{"get_resource": "demo_net"}
+                            },
+                            "type": "OS::Neutron::Subnet"
+                        },
+                        
+                        "server_port":{
+                            "properties":{ 
+                                "fixed_ips":[{ 
+                                    "subnet_id":{"get_resource": "demo_subnet"}}],
+                                    
+                                "network_id":{"get_resource": "demo_net"}
+                                    
+                            },                   
+                            "type": "OS::Neutron::Port"
+                        },
+
+                        "hello_world":{
+                            "type": "OS::Nova::Server",
+                            "properties":{
+                                "availability_zone":{ "get_param": "zone_server"}, 
+                                "flavor":{"get_param": "flavor"},
+                                "image":{"get_param": "image_name"},
+                                "key_name":{"get_resource": "demo_key"},
+                                "name":{"get_param": "server_name"},                        
+                                "networks": [{"port":{"get_resource": "server_port"}
+                                }]
+                                }
+                            
+                        }
+                            
+                    }
+                },
+                "timeout_mins": 60
+            }
+        }
 def main():
     # d= AccountView.token()
     # c=AccountView.create_user()
-     f= AccountView.delete_user()
-        
+    # f= AccountView.delete_user()
+    #f=AccountView.create_instance()
+    # f=AccountView.create_img_from_server()
+    # f=AccountView.create_snapshot()
+    # f=AccountView.create_vol()
+    # f=AccountView.create_flavor()
+
+
 main()
 #         #openstack 사용자 생성
 #         user_res = requests.token("http://"+address+"/identity/v3/users",

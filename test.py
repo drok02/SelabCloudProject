@@ -240,102 +240,157 @@ class AccountView():
         key_name= input("key 이름 입력 : ")
         server_name= input("server 이름 입력 : ")
         openstack_stack_payload ={
-                "files": {"myfile": "#!/bin/bash\necho \"Hello world\" > /root/testfile.txt"},
+                "files": {},
                 "disable_rollback": "true",
-                "parameters": {
-                    "flavor": "ds512M",
-                    "demo_net_cidr": "172.24.4.0/24",
-                    "demo_net_gateway": "172.24.4.1",
-                    "demo_net_pool_end" : "172.24.4.200",
-                    "demo_net_pool_start" : "172.24.4.10",
-                    "image_name": "ubuntu_basic",
-                    "key_name": key_name,
-                    "net_name":"public",
-                    "server_name":server_name,
-                    "zone_server":"nova"
-                        },
                 "stack_name": stack_name,
                 "template": {
                     "heat_template_version": "2021-04-16",
-                    "description": "Simple template to test heat commands",
-                    "parameters": {
-                        "flavor": {
-                            "default": "ds512M",
-                            "type": "string"
-                        },
-                    "demo_net_cidr": {"type": "string"},
-                    "demo_net_gateway": {"type": "string"},
-                    "demo_net_pool_end" : {"type": "string"},
-                    "demo_net_pool_start" : {"type": "string"},
-                    "image_name": {"type": "string"},
-                    "key_name": {"type": "string"},
-                    "net_name": {"type": "string"},
-                    "server_name": {"type": "string"},
-                    "zone_server": {"type": "string"}
-                    },
+                    "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.\n",
                     "resources": {
-                        "demo_key" : {
-                            "type": "OS::Nova::KeyPair",
+                        "mybox": {
+                            "type": "OS::Nova::Server",
                             "properties": {
-                                "name":
-                                    {"get_param" : "key_name"}
+                                "name": "mybox_youtubeExample3",
+                                "flavor": "ds512M",
+                                "image": "ubuntu_basic",
+                                "key_name": {
+                                "get_resource": "demo_key"
+                                },
+                                "networks": [
+                                {
+                                    "port": {
+                                    "get_resource": "mybox_management_port"
+                                    }
+                                }
+                                ],
+                                "user_data": {
+                                "get_resource": "myconfig"
+                                },
+                                "user_data_format": "RAW"
                             }
-                        },                       
-                        "server_port":{
-                            "properties":{ 
-                                "fixed_ips":[{ 
-                                    "subnet_id":"34f9d418-9934-488e-b6b9-6c64ab6cdc31"}],
-                                    
-                                "network_id": "d0628ece-221e-4025-ae89-f933ad20c583"
-                                    
-                            },                   
-                            "type": "OS::Neutron::Port"
                         },
-
-                        "one_init": {
+                        "myconfig": {
                             "type": "OS::Heat::CloudConfig",
                             "properties": {
                                 "cloud_config": {
-                                    "bootcmd": 
-                                    [
-                                        "mkdir /home/ubuntu/bong"
-                                    ],
-                                    "chpasswd": {
-                                        "list": ["ubuntu:1111"]
+                                "package_update": "true",
+                                "package_upgrade": "true",
+                                "users": [
+                                    "default",
+                                    {
+                                    "name": "bong",
+                                    "lock-passwd": "false",
+                                    "passwd": "1111",
+                                    "shell": "/bin/bash",
+                                    "sudo": "ALL=(ALL) NOPASSWD:ALL"
                                     }
+                                ],
+                                "ssh_pwauth": "true",
+                                "write_files": [
+                                    {
+                                    "path": "/tmp/one",
+                                    "content": "The one is bar"
+                                    }
+                                ]
                                 }
                             }
                         },
-                        "server_init": {
-                            "type": "OS::Heat::MultipartMime",
+                        "demo_key": {
+                            "type": "OS::Nova::KeyPair",
                             "properties": {
-                                "parts": [
-                                    {
-                                        "config": {
-                                            "get_resource": "one_init"
-                                        }
-                                    }
+                                "name": "test-key23"
+                            }
+                        },
+                        "mybox_management_port": {
+                            "type": "OS::Neutron::Port",
+                            "properties": {
+                                "network_id": {
+                                "get_resource": "mynet"
+                                },
+                                "security_groups": [
+                                {
+                                    "get_resource": "mysecurity_group"
+                                }
                                 ]
                             }
-                        },                        
-                        "hello_world":{
-                            "type": "OS::Nova::Server",
-                            "properties":{
-                                "availability_zone":{ "get_param": "zone_server"}, 
-                                "flavor":{"get_param": "flavor"},
-                                "image":{"get_param": "image_name"},
-                                "key_name":{"get_resource": "demo_key"},
-                                "name":{"get_param": "server_name"},                        
-                                "networks": [{"port":{"get_resource": "server_port"}
-                                }],
-                                "user_data_format": "RAW",
-                                "user_data": {"#!/bin/bash -xv\necho \"hello world\" &gt; /root/hello-world.txt\n"}
+                        },
+                        "server_floating_ip": {
+                            "type": "OS::Neutron::FloatingIP",
+                            "properties": {
+                                "floating_network_id": "d0628ece-221e-4025-ae89-f933ad20c583",
+                                "port_id": {
+                                "get_resource": "mybox_management_port"
                                 }
-                            
+                            }
+                        },
+                        "mynet": {
+                            "type": "OS::Neutron::Net",
+                            "properties": {
+                                "name": "management-net2"
+                            }
+                        },
+                        "mysub_net": {
+                            "type": "OS::Neutron::Subnet",
+                            "properties": {
+                                "name": "management-sub-net",
+                                "network_id": {
+                                "get_resource": "mynet"
+                                },
+                                "cidr": "172.24.7.0/24",
+                                "gateway_ip": "172.24.7.1",
+                                "enable_dhcp": "true",
+                                "allocation_pools": [
+                                {
+                                    "start": "172.24.7.2",
+                                    "end": "172.24.7.50"
+                                }
+                                ]
+                            }
+                        },
+                        "mysecurity_group": {
+                            "type": "OS::Neutron::SecurityGroup",
+                            "properties": {
+                                "name": "mysecurity_group",
+                                "rules": [
+                                {
+                                    "remote_ip_prefix": "0.0.0.0/0",
+                                    "protocol": "tcp",
+                                    "port_range_min": 22,
+                                    "port_range_max": 22
+                                },
+                                {
+                                    "remote_ip_prefix": "0.0.0.0/0",
+                                    "protocol": "icmp",
+                                    "direction": "ingress"
+                                }
+                                ]
+                            }
+                        },
+                        "router": {
+                            "type": "OS::Neutron::Router"
+                            },
+                            "router_gateway": {
+                            "type": "OS::Neutron::RouterGateway",
+                            "properties": {
+                                "router_id": {
+                                "get_resource": "router"
+                                },
+                                "network_id": "d0628ece-221e-4025-ae89-f933ad20c583"
+                            }
+                        },
+                        "router_interface": {
+                            "type": "OS::Neutron::RouterInterface",
+                            "properties": {
+                                "router_id": {
+                                "get_resource": "router"
+                                },
+                                "subnet_id": {
+                                "get_resource": "mysub_net"
+                                }
+                            }
                         }
-                            
                     }
-                },
+                    },
                 "timeout_mins": 60
             }  
         user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
@@ -346,18 +401,18 @@ class AccountView():
 
 
     def create_stack_yaml():
-        with open('/Users/ibonghun/Desktop/test/ex1.yaml') as f:
+        with open('G:\내 드라이브\google_학부연구생\SELAB\SelabCloudProject\ex5_api_ver.yaml') as f:
             yaml_data=yaml.load(f,Loader=yaml.FullLoader)
             admin_token= AccountView.token()
             user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
                 headers = {'X-Auth-Token' : admin_token},
-                data = yaml_data)
+                data = yaml.dump(yaml_data))
             print("stack생성 ",user_res)
             print("yaml데이터는 : ",yaml_data)
           
 
     def loader():
-        with open('/Users/ibonghun/Desktop/test/SelabCloudProject/ex1.yaml') as f:
+        with open('G:\내 드라이브\google_학부연구생\SELAB\SelabCloudProject\ex5_api_ver.yaml') as f:
             print("yaml파일 내용: \n")
             yaml_data=yaml.load(f,Loader=yaml.FullLoader)
             print(yaml_data)
@@ -373,8 +428,8 @@ def main():
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-    #  f=AccountView.create_stack()
-      f=AccountView.create_stack_yaml()
+     f=AccountView.create_stack()
+    #   f=AccountView.create_stack_yaml()
         # f=AccountView.loader()
 
 main()

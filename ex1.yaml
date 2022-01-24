@@ -1,0 +1,59 @@
+heat_template_version: 2021-04-16
+
+description: Create new Tenant network and add a subnet to the network. Create  2 VMs and place the VMs in 2 unique compute nodes. Ensure each VM has a floating IP. User that runs this MUST be in the openstack admin role
+  
+stack_name: ex1    
+resources:
+  demo_net:
+    type: OS::Neutron::Net
+    properties:
+      name: publicsub
+
+  demo_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: demo_net }
+      cidr: 172.24.5.0/24 
+      gateway_ip: 172.24.5.1
+      allocation_pools:
+        - start: 172.24.5.10
+          end: 172.24.5.200
+
+  demo_router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: public
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: demo_router }
+      subnet_id: { get_resource: demo_subnet }
+
+  demo_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: test-key2
+
+  server:
+    type: OS::Nova::Server
+    properties:
+      name: test123
+      image: ubuntu_basic
+      flavor: ds512M
+      key_name:  { get_resource: demo_key }
+      availability_zone: nova
+      networks:
+        - port: { get_resource: server_port }
+  server_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: demo_net }
+      fixed_ips:
+        - subnet_id: { get_resource: demo_subnet }
+  server_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: public
+      port_id: { get_resource: server_port }

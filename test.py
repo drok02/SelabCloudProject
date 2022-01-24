@@ -1,8 +1,11 @@
 from django.shortcuts import render
 import json
+import yaml
 import requests
 from django.views import View
 from django.http import HttpResponse, JsonResponse
+import sys
+
 address = "164.125.70.22"
 # 토큰 받아오기
 class AccountView():
@@ -237,15 +240,15 @@ class AccountView():
         key_name= input("key 이름 입력 : ")
         server_name= input("server 이름 입력 : ")
         openstack_stack_payload ={
-                "files": {},
+                "files": {"myfile": "#!/bin/bash\necho \"Hello world\" > /root/testfile.txt"},
                 "disable_rollback": "true",
                 "parameters": {
-                    "flavor": "m1.tiny",
+                    "flavor": "ds512M",
                     "demo_net_cidr": "172.24.4.0/24",
                     "demo_net_gateway": "172.24.4.1",
                     "demo_net_pool_end" : "172.24.4.200",
                     "demo_net_pool_start" : "172.24.4.10",
-                    "image_name": "cirros-0.5.2-x86_64-disk",
+                    "image_name": "ubuntu_basic",
                     "key_name": key_name,
                     "net_name":"public",
                     "server_name":server_name,
@@ -253,7 +256,7 @@ class AccountView():
                         },
                 "stack_name": stack_name,
                 "template": {
-                    "heat_template_version": "2013-05-23",
+                    "heat_template_version": "2021-04-16",
                     "description": "Simple template to test heat commands",
                     "parameters": {
                         "flavor": {
@@ -281,13 +284,14 @@ class AccountView():
                         "server_port":{
                             "properties":{ 
                                 "fixed_ips":[{ 
-                                    "subnet_id":"76adb4ba-9636-4622-9605-0aa738eee3c0"}],
+                                    "subnet_id":"34f9d418-9934-488e-b6b9-6c64ab6cdc31"}],
                                     
-                                "network_id": "138aca3d-356f-442f-ba0f-b93891518029"
+                                "network_id": "d0628ece-221e-4025-ae89-f933ad20c583"
                                     
                             },                   
                             "type": "OS::Neutron::Port"
                         },
+
                         "one_init": {
                             "type": "OS::Heat::CloudConfig",
                             "properties": {
@@ -297,7 +301,7 @@ class AccountView():
                                         "mkdir /home/ubuntu/bong"
                                     ],
                                     "chpasswd": {
-                                        "list": "ubuntu:1111\n"
+                                        "list": ["ubuntu:1111"]
                                     }
                                 }
                             }
@@ -325,7 +329,7 @@ class AccountView():
                                 "networks": [{"port":{"get_resource": "server_port"}
                                 }],
                                 "user_data_format": "RAW",
-                                "user_data":{"get_resource": "server_init"}
+                                "user_data": {"#!/bin/bash -xv\necho \"hello world\" &gt; /root/hello-world.txt\n"}
                                 }
                             
                         }
@@ -334,11 +338,32 @@ class AccountView():
                 },
                 "timeout_mins": 60
             }  
-        user_res = requests.post("http://"+address+"/heat-api/v1/05eb34f3739447a3b959501f260eab82/stacks",
+        user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(openstack_stack_payload))
         print("stack생성 ",user_res)
 
+
+
+    def create_stack_yaml():
+        with open('/Users/ibonghun/Desktop/test/ex1.yaml') as f:
+            yaml_data=yaml.load(f,Loader=yaml.FullLoader)
+            admin_token= AccountView.token()
+            user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
+                headers = {'X-Auth-Token' : admin_token},
+                data = yaml_data)
+            print("stack생성 ",user_res)
+            print("yaml데이터는 : ",yaml_data)
+          
+
+    def loader():
+        with open('/Users/ibonghun/Desktop/test/SelabCloudProject/ex1.yaml') as f:
+            print("yaml파일 내용: \n")
+            yaml_data=yaml.load(f,Loader=yaml.FullLoader)
+            print(yaml_data)
+            # for item in yaml_data:
+                # print(item)
+            
 def main():
     #  d= AccountView.token()
     # c=AccountView.create_user()
@@ -348,7 +373,9 @@ def main():
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-    f=AccountView.create_stack()
+    #  f=AccountView.create_stack()
+      f=AccountView.create_stack_yaml()
+        # f=AccountView.loader()
 
 main()
 #         #openstack 사용자 생성

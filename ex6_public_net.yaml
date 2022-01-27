@@ -26,8 +26,6 @@ resources:
         users:
           - default
           - name: bong
-            lock-passwd: false
-            passwd: '1111'
             shell: /bin/bash
             sudo: "ALL=(ALL) NOPASSWD:ALL"
         ssh_pwauth: true         
@@ -39,12 +37,13 @@ resources:
         chpasswd:
           list: |
             root:1111
-            bong:3333
           expired: False
         manage_home_ubuntu: false
-        package:
+        packages:
           - apache2
           - net-tools
+          - pwgen
+          - pastebinit
 
   demo_key:
     type: OS::Nova::KeyPair
@@ -67,19 +66,20 @@ resources:
   mynet:
     type: OS::Neutron::Net
     properties:
-      name: management-net_extension
+      name: management-net
 
   mysub_net:
     type: OS::Neutron::Subnet
     properties:
       name: management-sub-net
       network_id: { get_resource: mynet }
-      cidr: 172.24.6.0/24 
-      gateway_ip: 172.24.6.1
+      cidr: 10.0.0.0/24 
+      gateway_ip: 10.0.0.1
       enable_dhcp: true
-      allocation_pools:
-        - start: 172.24.6.2
-          end: 172.24.6.50
+      dns_nameservers: 
+      - 8.8.8.8  
+      - 8.8.4.4
+
 
   mysecurity_group:
     type: OS::Neutron::SecurityGroup
@@ -93,6 +93,7 @@ resources:
         - remote_ip_prefix: 0.0.0.0/0
           protocol: icmp
           direction: ingress
+
 
   router:
     type: OS::Neutron::Router
@@ -108,10 +109,6 @@ resources:
     properties:
       router_id: {get_resource: router}
       subnet_id: {get_resource: mysub_net}
-
-
-
-
 
 
 

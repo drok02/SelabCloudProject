@@ -240,158 +240,167 @@ class AccountView():
         key_name= input("key 이름 입력 : ")
         server_name= input("server 이름 입력 : ")
         openstack_stack_payload ={
-                "files": {},
-                "disable_rollback": "true",
-                "stack_name": stack_name,
+                                
+                "stack_name": "bong",
                 "template": {
-                    "heat_template_version": "2021-04-16",
-                    "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.\n",
+                    "heat_template_version": "2021-04-16T00:00:00.000Z",
+                    "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
                     "resources": {
-                        "mybox": {
-                            "type": "OS::Nova::Server",
-                            "properties": {
-                                "name": "mybox_youtubeExample3",
-                                "flavor": "ds512M",
-                                "image": "ubuntu_basic",
-                                "key_name": {
-                                "get_resource": "demo_key"
-                                },
-                                "networks": [
-                                {
-                                    "port": {
-                                    "get_resource": "mybox_management_port"
-                                    }
-                                }
-                                ],
-                                "user_data": {
-                                "get_resource": "myconfig"
-                                },
-                                "user_data_format": "RAW"
-                            }
+                    "mybox": {
+                        "type": "OS::Nova::Server",
+                        "properties": {
+                        "name": "mybox_summitExtension",
+                        "flavor": "ds512M",
+                        "image": "ubuntu_basic",
+                        "key_name": {
+                            "get_resource": "demo_key"
                         },
-                        "myconfig": {
-                            "type": "OS::Heat::CloudConfig",
-                            "properties": {
-                                "cloud_config": {
-                                "package_update": "true",
-                                "package_upgrade": "true",
-                                "users": [
-                                    "default",
-                                    {
-                                    "name": "bong",
-                                    "lock-passwd": "false",
-                                    "passwd": "1111",
-                                    "shell": "/bin/bash",
-                                    "sudo": "ALL=(ALL) NOPASSWD:ALL"
-                                    }
-                                ],
-                                "ssh_pwauth": "true",
-                                "write_files": [
-                                    {
-                                    "path": "/tmp/one",
-                                    "content": "The one is bar"
-                                    }
-                                ]
-                                }
-                            }
-                        },
-                        "demo_key": {
-                            "type": "OS::Nova::KeyPair",
-                            "properties": {
-                                "name": "test-key23"
-                            }
-                        },
-                        "mybox_management_port": {
-                            "type": "OS::Neutron::Port",
-                            "properties": {
-                                "network_id": {
-                                "get_resource": "mynet"
-                                },
-                                "security_groups": [
-                                {
-                                    "get_resource": "mysecurity_group"
-                                }
-                                ]
-                            }
-                        },
-                        "server_floating_ip": {
-                            "type": "OS::Neutron::FloatingIP",
-                            "properties": {
-                                "floating_network_id": "d0628ece-221e-4025-ae89-f933ad20c583",
-                                "port_id": {
+                        "networks": [
+                            {
+                            "port": {
                                 "get_resource": "mybox_management_port"
-                                }
                             }
-                        },
-                        "mynet": {
-                            "type": "OS::Neutron::Net",
-                            "properties": {
-                                "name": "management-net2"
                             }
+                        ],
+                        "user_data": {
+                            "get_resource": "myconfig"
                         },
-                        "mysub_net": {
-                            "type": "OS::Neutron::Subnet",
-                            "properties": {
-                                "name": "management-sub-net",
-                                "network_id": {
-                                "get_resource": "mynet"
-                                },
-                                "cidr": "172.24.7.0/24",
-                                "gateway_ip": "172.24.7.1",
-                                "enable_dhcp": "true",
-                                "allocation_pools": [
-                                {
-                                    "start": "172.24.7.2",
-                                    "end": "172.24.7.50"
-                                }
-                                ]
+                        "user_data_format": "RAW"
+                        }
+                    },
+                    "myconfig": {
+                        "type": "OS::Heat::CloudConfig",
+                        "properties": {
+                        "cloud_config": {
+                            "package_update": "true",
+                            "package_upgrade": "true",
+                            "users": [
+                            "default",
+                            {
+                                "name": "bong",
+                                "shell": "/bin/bash",
+                                "sudo": "ALL=(ALL) NOPASSWD:ALL"
                             }
-                        },
-                        "mysecurity_group": {
-                            "type": "OS::Neutron::SecurityGroup",
-                            "properties": {
-                                "name": "mysecurity_group",
-                                "rules": [
-                                {
-                                    "remote_ip_prefix": "0.0.0.0/0",
-                                    "protocol": "tcp",
-                                    "port_range_min": 22,
-                                    "port_range_max": 22
-                                },
-                                {
-                                    "remote_ip_prefix": "0.0.0.0/0",
-                                    "protocol": "icmp",
-                                    "direction": "ingress"
-                                }
-                                ]
+                            ],
+                            "ssh_pwauth": "true",
+                            "write_files": [
+                            {
+                                "path": "/tmp/one",
+                                "content": "The one is bar"
                             }
-                        },
-                        "router": {
-                            "type": "OS::Neutron::Router"
+                            ],
+                            "bootcmd": [
+                            "mkdir /home/ubuntu/bong"
+                            ],
+                            "chpasswd": {
+                            "list": "root:1111\n",
+                            "expired": "false"
                             },
-                            "router_gateway": {
-                            "type": "OS::Neutron::RouterGateway",
-                            "properties": {
-                                "router_id": {
-                                "get_resource": "router"
-                                },
-                                "network_id": "d0628ece-221e-4025-ae89-f933ad20c583"
-                            }
+                            "manage_home_ubuntu": "false",
+                            "packages": [
+                            "apache2",
+                            "net-tools",
+                            "pwgen",
+                            "pastebinit"
+                            ]
+                        }
+                        }
+                    },
+                    "demo_key": {
+                        "type": "OS::Nova::KeyPair",
+                        "properties": {
+                        "name": "test-key4"
+                        }
+                    },
+                    "mybox_management_port": {
+                        "type": "OS::Neutron::Port",
+                        "properties": {
+                        "network_id": {
+                            "get_resource": "mynet"
                         },
-                        "router_interface": {
-                            "type": "OS::Neutron::RouterInterface",
-                            "properties": {
-                                "router_id": {
-                                "get_resource": "router"
-                                },
-                                "subnet_id": {
-                                "get_resource": "mysub_net"
-                                }
+                        "security_groups": [
+                            {
+                            "get_resource": "mysecurity_group"
                             }
+                        ]
+                        }
+                    },
+                    "server_floating_ip": {
+                        "type": "OS::Neutron::FloatingIP",
+                        "properties": {
+                        "floating_network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0",
+                        "port_id": {
+                            "get_resource": "mybox_management_port"
+                        }
+                        }
+                    },
+                    "mynet": {
+                        "type": "OS::Neutron::Net",
+                        "properties": {
+                        "name": "management-net"
+                        }
+                    },
+                    "mysub_net": {
+                        "type": "OS::Neutron::Subnet",
+                        "properties": {
+                        "name": "management-sub-net",
+                        "network_id": {
+                            "get_resource": "mynet"
+                        },
+                        "cidr": "10.0.0.0/24",
+                        "gateway_ip": "10.0.0.1",
+                        "enable_dhcp": "true",
+                        "dns_nameservers": [
+                            "8.8.8.8",
+                            "8.8.4.4"
+                        ]
+                        }
+                    },
+                    "mysecurity_group": {
+                        "type": "OS::Neutron::SecurityGroup",
+                        "properties": {
+                        "name": "mysecurity_group",
+                        "rules": [
+                            {
+                            "remote_ip_prefix": "0.0.0.0/0",
+                            "protocol": "tcp",
+                            "port_range_min": 22,
+                            "port_range_max": 22
+                            },
+                            {
+                            "remote_ip_prefix": "0.0.0.0/0",
+                            "protocol": "icmp",
+                            "direction": "ingress"
+                            }
+                        ]
+                        }
+                    },
+                    "router": {
+                        "type": "OS::Neutron::Router"
+                    },
+                    "router_gateway": {
+                        "type": "OS::Neutron::RouterGateway",
+                        "properties": {
+                        "router_id": {
+                            "get_resource": "router"
+                        },
+                        "network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0"
+                        }
+                    },
+                    "router_interface": {
+                        "type": "OS::Neutron::RouterInterface",
+                        "properties": {
+                        "router_id": {
+                            "get_resource": "router"
+                        },
+                        "subnet_id": {
+                            "get_resource": "mysub_net"
+                        }
                         }
                     }
-                    },
-                "timeout_mins": 60
+                    }
+                }
+                
             }  
         user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
             headers = {'X-Auth-Token' : admin_token},
@@ -401,14 +410,14 @@ class AccountView():
 
 
     def create_stack_yaml():
-        with open('G:\내 드라이브\google_학부연구생\SELAB\SelabCloudProject\ex5_api_ver.yaml') as f:
+        with open('/Users/ibonghun/Desktop/test/SelabCloudProject/ex7_private_net_api_ver.yaml') as f:
             yaml_data=yaml.load(f,Loader=yaml.FullLoader)
             admin_token= AccountView.token()
-            user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
+            user_res = requests.post("http://"+address+"/heat-api/v1/70cbbe815ccc46c8bb3dc86a452b4437/stacks",
                 headers = {'X-Auth-Token' : admin_token},
                 data = yaml.dump(yaml_data))
             print("stack생성 ",user_res)
-            print("yaml데이터는 : ",yaml_data)
+            # print("yaml데이터는 : ",yaml_data)
           
 
     def loader():

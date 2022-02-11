@@ -1,16 +1,16 @@
 {
                                 
-    "stack_name": "bong",
+    "stack_name": "bong2",
     "template": {
-        "heat_template_version": "2021-04-16T00:00:00.000Z",
+        "heat_template_version": "2021-04-16",
         "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
         "resources": {
         "mybox": {
             "type": "OS::Nova::Server",
             "properties": {
-            "name": "mybox_summitExtension",
+            "name": "mybox_summitExtension1",
             "flavor": "ds512M",
-            "image": "ubuntu_basic",
+            "image": "ubuntu",
             "key_name": {
                 "get_resource": "demo_key"
             },
@@ -68,7 +68,7 @@
         "demo_key": {
             "type": "OS::Nova::KeyPair",
             "properties": {
-            "name": "test-key4"
+            "name": "test-key3"
             }
         },
         "mybox_management_port": {
@@ -87,7 +87,7 @@
         "server_floating_ip": {
             "type": "OS::Neutron::FloatingIP",
             "properties": {
-            "floating_network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0",
+            "floating_network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22",
             "port_id": {
                 "get_resource": "mybox_management_port"
             }
@@ -143,7 +143,7 @@
             "router_id": {
                 "get_resource": "router"
             },
-            "network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0"
+            "network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22"
             }
         },
         "router_interface": {

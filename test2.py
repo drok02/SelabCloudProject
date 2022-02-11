@@ -238,177 +238,15 @@ class AccountView():
     # stack 생성. 
     def create_stack():
         admin_token= AccountView.token()
-        stack_name= input("stack 이름 입력 : ")
-        key_name= input("key 이름 입력 : ")
-        server_name= input("server 이름 입력 : ")
-        openstack_stack_payload ={
-                                
-                "stack_name": "bong",
-                "template": {
-                    "heat_template_version": "2021-04-16T00:00:00.000Z",
-                    "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
-                    "resources": {
-                    "mybox": {
-                        "type": "OS::Nova::Server",
-                        "properties": {
-                        "name": "mybox_summitExtension",
-                        "flavor": "ds512M",
-                        "image": "ubuntu",
-                        "key_name": {
-                            "get_resource": "demo_key"
-                        },
-                        "networks": [
-                            {
-                            "port": {
-                                "get_resource": "mybox_management_port"
-                            }
-                            }
-                        ],
-                        "user_data": {
-                            "get_resource": "myconfig"
-                        },
-                        "user_data_format": "RAW"
-                        }
-                    },
-                    "myconfig": {
-                        "type": "OS::Heat::CloudConfig",
-                        "properties": {
-                        "cloud_config": {
-                            "package_update": "true",
-                            "package_upgrade": "true",
-                            "users": [
-                            "default",
-                            {
-                                "name": "bong",
-                                "shell": "/bin/bash",
-                                "sudo": "ALL=(ALL) NOPASSWD:ALL"
-                            }
-                            ],
-                            "ssh_pwauth": "true",
-                            "write_files": [
-                            {
-                                "path": "/tmp/one",
-                                "content": "The one is bar"
-                            }
-                            ],
-                            "bootcmd": [
-                            "mkdir /home/ubuntu/bong"
-                            ],
-                            "chpasswd": {
-                            "list": "root:1111\n",
-                            "expired": "false"
-                            },
-                            "manage_home_ubuntu": "false",
-                            "packages": [
-                            "apache2",
-                            "net-tools",
-                            "pwgen",
-                            "pastebinit"
-                            ]
-                        }
-                        }
-                    },
-                    "demo_key": {
-                        "type": "OS::Nova::KeyPair",
-                        "properties": {
-                        "name": "test-key4"
-                        }
-                    },
-                    "mybox_management_port": {
-                        "type": "OS::Neutron::Port",
-                        "properties": {
-                        "network_id": {
-                            "get_resource": "mynet"
-                        },
-                        "security_groups": [
-                            {
-                            "get_resource": "mysecurity_group"
-                            }
-                        ]
-                        }
-                    },
-                    "server_floating_ip": {
-                        "type": "OS::Neutron::FloatingIP",
-                        "properties": {
-                        "floating_network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22",
-                        "port_id": {
-                            "get_resource": "mybox_management_port"
-                        }
-                        }
-                    },
-                    "mynet": {
-                        "type": "OS::Neutron::Net",
-                        "properties": {
-                        "name": "management-net"
-                        }
-                    },
-                    "mysub_net": {
-                        "type": "OS::Neutron::Subnet",
-                        "properties": {
-                        "name": "management-sub-net",
-                        "network_id": {
-                            "get_resource": "mynet"
-                        },
-                        "cidr": "10.0.0.0/24",
-                        "gateway_ip": "10.0.0.1",
-                        "enable_dhcp": "true",
-                        "dns_nameservers": [
-                            "8.8.8.8",
-                            "8.8.4.4"
-                        ]
-                        }
-                    },
-                    "mysecurity_group": {
-                        "type": "OS::Neutron::SecurityGroup",
-                        "properties": {
-                        "name": "mysecurity_group",
-                        "rules": [
-                            {
-                            "remote_ip_prefix": "0.0.0.0/0",
-                            "protocol": "tcp",
-                            "port_range_min": 22,
-                            "port_range_max": 22
-                            },
-                            {
-                            "remote_ip_prefix": "0.0.0.0/0",
-                            "protocol": "icmp",
-                            "direction": "ingress"
-                            }
-                        ]
-                        }
-                    },
-                    "router": {
-                        "type": "OS::Neutron::Router"
-                    },
-                    "router_gateway": {
-                        "type": "OS::Neutron::RouterGateway",
-                        "properties": {
-                        "router_id": {
-                            "get_resource": "router"
-                        },
-                        "network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22"
-                        }
-                    },
-                    "router_interface": {
-                        "type": "OS::Neutron::RouterInterface",
-                        "properties": {
-                        "router_id": {
-                            "get_resource": "router"
-                        },
-                        "subnet_id": {
-                            "get_resource": "mysub_net"
-                        }
-                        }
-                    }
-                    }
-                }
-                
-            }  
+        # stack_name= input("stack 이름 입력 : ")
+        # key_name= input("key 이름 입력 : ")
+        server_name= input("server 이름 입력 : ")  
         with open('C:/Users/PC/bong/SelabCloudProject/jsontest.json','r') as f:
             json_data=json.load(f)
+        json_data['template']['resources']['mybox']['properties']['name']=server_name
         user_res = requests.post("http://"+address+"/heat-api/v1/e90ed7ec3ac84590852a635c81b40d1d/stacks",
             headers = {'X-Auth-Token' : admin_token},
-            data = json.dumps(openstack_stack_payload))
+            data = json.dumps(json_data))
         print("stack생성 ",user_res)
 
 
@@ -432,9 +270,11 @@ class AccountView():
             # for item in yaml_data:
                 # print(item)
     def jsonprint():
-        with open('/Users/ibonghun/Desktop/test/SelabCloudProject/jsontest.json','r') as f:
+        with open('C:/Users/PC/bong/SelabCloudProject/jsontest.json','r') as f:
             json_data=json.load(f)
-        # print(json.dumps(json_data))
+        k_data=json_data['template']['resources']['mybox']
+        json_data['template']['resources']['mybox']['properties']['name']="bong"
+        print(json.dumps(json_data))
         return json.dumps(json_data)        
 def main():
     # d= AccountView.token()

@@ -330,7 +330,7 @@ class AccountView():
                     "server_floating_ip": {
                         "type": "OS::Neutron::FloatingIP",
                         "properties": {
-                        "floating_network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0",
+                        "floating_network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22",
                         "port_id": {
                             "get_resource": "mybox_management_port"
                         }
@@ -386,7 +386,7 @@ class AccountView():
                         "router_id": {
                             "get_resource": "router"
                         },
-                        "network_id": "db4e8403-0b5b-4027-976a-2735df7d4bd0"
+                        "network_id": "bebea9a2-08a6-4b4a-a4e3-a9aaeefa6b22"
                         }
                     },
                     "router_interface": {
@@ -408,7 +408,7 @@ class AccountView():
             json_data=json.load(f)
         user_res = requests.post("http://"+address+"/heat-api/v1/e90ed7ec3ac84590852a635c81b40d1d/stacks",
             headers = {'X-Auth-Token' : admin_token},
-            data = json.dumps(json_data))
+            data = json.dumps(openstack_stack_payload))
         print("stack생성 ",user_res)
 
 

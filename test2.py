@@ -6,7 +6,7 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
 
-address = "10.125.70.26"
+address = "192.168.0.48"
 # 토큰 받아오기
 class AccountView():
     def token():
@@ -253,7 +253,7 @@ class AccountView():
                         "properties": {
                         "name": "mybox_summitExtension",
                         "flavor": "ds512M",
-                        "image": "ubuntu_basic",
+                        "image": "ubuntu",
                         "key_name": {
                             "get_resource": "demo_key"
                         },
@@ -404,9 +404,9 @@ class AccountView():
                 }
                 
             }  
-        with open('/Users/ibonghun/Desktop/test/SelabCloudProject/jsontest.json','r') as f:
+        with open('C:/Users/PC/bong/SelabCloudProject/jsontest.json','r') as f:
             json_data=json.load(f)
-        user_res = requests.post("http://"+address+"/heat-api/v1/0bf7b99f5d5642558b06333f4a900061/stacks",
+        user_res = requests.post("http://"+address+"/heat-api/v1/e90ed7ec3ac84590852a635c81b40d1d/stacks",
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(json_data))
         print("stack생성 ",user_res)
@@ -437,7 +437,7 @@ class AccountView():
         # print(json.dumps(json_data))
         return json.dumps(json_data)        
 def main():
-    d= AccountView.token()
+    # d= AccountView.token()
     # c=AccountView.create_user()
     # f= AccountView.delete_user()
     #f=AccountView.create_instance()
@@ -445,7 +445,7 @@ def main():
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-    #  f=AccountView.create_stack()
+     f=AccountView.create_stack()
     #   f=AccountView.create_stack_yaml()
         # f=AccountView.loader()
     # f=AccountView.jsonprint()

@@ -6,7 +6,7 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
 
-address = "164.125.70.22"
+address = "192.168.0.48"
 # 토큰 받아오기
 class AccountView():
     def token():
@@ -133,7 +133,7 @@ class AccountView():
         print()
 
         #특정 img id 참조
-        img_uuid = requests.get("http://"+address+"/image/v2/images?name=cirros-0.4.0-x86_64-disk",
+        img_uuid = requests.get("http://"+address+"/image/v2/images?name=cirros-0.5.2-x86_64-disk",
             headers = {'X-Auth-Token' : admin_token}
             ).json()["images"][0]["id"]
 
@@ -429,15 +429,15 @@ class AccountView():
                 # print(item)
             
 def main():
-    #  d= AccountView.token()
+    #   d= AccountView.token()
     # c=AccountView.create_user()
     # f= AccountView.delete_user()
-    #f=AccountView.create_instance()
+    f=AccountView.create_instance()
     # f=AccountView.create_img_from_server()
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-     f=AccountView.create_stack()
+    #  f=AccountView.create_stack()
     #   f=AccountView.create_stack_yaml()
         # f=AccountView.loader()
 

@@ -6,7 +6,7 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
 
-address = "192.168.0.48"
+address = "10.125.70.26"
 # 토큰 받아오기
 class AccountView():
     def token():

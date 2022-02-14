@@ -125,7 +125,7 @@ class AccountView():
         admin_token= AccountView.token()
         instacne_name=input("생성할 인스턴스 이름 입력: ")
         # 특정 (shared) 네트워크 참조
-        network_uuid = requests.get("http://"+address+":9696/v2.0/networks?name=shared",
+        network_uuid = requests.get("http://"+address+":9696/v2.0/networks?name=public",
             headers = {'X-Auth-Token' : admin_token}
             ).json()["networks"][0]["id"]
         print()
@@ -133,7 +133,7 @@ class AccountView():
         print()
 
         #특정 img id 참조
-        img_uuid = requests.get("http://"+address+"/image/v2/images?name=cirros-0.4.0-x86_64-disk",
+        img_uuid = requests.get("http://"+address+"/image/v2/images?name=ubuntu",
             headers = {'X-Auth-Token' : admin_token}
             ).json()["images"][0]["id"]
 
@@ -241,7 +241,7 @@ class AccountView():
         # stack_name= input("stack 이름 입력 : ")
         # key_name= input("key 이름 입력 : ")
         server_name= input("server 이름 입력 : ")  
-        with open('C:/Users/PC/bong/SelabCloudProject/jsontest.json','r') as f:
+        with open('jsontest.json','r') as f:
             json_data=json.load(f)
         json_data['template']['resources']['mybox']['properties']['name']=server_name
         user_res = requests.post("http://"+address+"/heat-api/v1/e90ed7ec3ac84590852a635c81b40d1d/stacks",
@@ -280,7 +280,7 @@ def main():
     # d= AccountView.token()
     # c=AccountView.create_user()
     # f= AccountView.delete_user()
-    #f=AccountView.create_instance()
+    # f=AccountView.create_instance()
     # f=AccountView.create_img_from_server()
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()

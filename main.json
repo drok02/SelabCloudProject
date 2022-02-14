@@ -34,10 +34,7 @@
                     "package_update": "true",
                     "package_upgrade": "true",
                     "users": [
-                    "default","bong","hun"
-                    
-
-                    
+                    "default","bong","hun"      
                     ],
                     "ssh_pwauth": "true",
                     "write_files": [

@@ -44,12 +44,19 @@ class AccountView():
 
     def create_stack():
         admin_token= AccountView.token()
+        system_num=int(input("원하는 시스템 번호를 입력: 1.Ubuntu 2.CentOS 3.Fedora"))
         stack_name= input("stack 이름 입력 : ")
         key_name= input("key 이름 입력 : ")
         server_name= input("server 이름 입력 : ") 
         num_user=int(input("사용자 수 입력: ")) 
         with open('main.json','r') as f:
             json_data=json.load(f)
+        if(system_num==1):
+            json_data['template']['resources']['mybox']['properties']['image']="ubuntu"
+        elif(system_num==2):
+            json_data['template']['resources']['mybox']['properties']['image']="centos"
+        elif(system_num==3):
+            json_data['template']['resources']['mybox']['properties']['image']="Fedora-Cloud-Base-33-1.2.x86_64"
         json_data['stack_name']=stack_name
         json_data['template']['resources']['demo_key']['properties']['name']=key_name
         json_data['template']['resources']['mybox']['properties']['name']=server_name

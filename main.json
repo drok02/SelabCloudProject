@@ -47,7 +47,7 @@
                     "mkdir /home/ubuntu/bong"
                     ],
                     "chpasswd": {
-                        "list": ["root:1111\n","bong:2222","hun:0000"],
+                        "list": ["root:1111","bong:2222","hun:0000"],
                         "expired": "false"
                     },
                     "manage_home_ubuntu": "false",
@@ -55,7 +55,8 @@
                     "apache2",
                     "net-tools",
                     "pwgen",
-                    "pastebinit"
+                    "pastebinit",
+                    "libguestfs-tools"
                     ]
                 }
                 }

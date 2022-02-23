@@ -66,6 +66,8 @@ class AccountView():
         for i in range(num_user):
             json_data['template']['resources']['myconfig']['properties']['cloud_config']['users'].append("%d"%(i))
             json_data['template']['resources']['myconfig']['properties']['cloud_config']['chpasswd']["list"].append("%d:%d%d%d%d"%(i,i,i,i,i))
+
+            
         user_res = requests.post("http://"+address+"/heat-api/v1/6afe05fbd2cb47a6b149ee3541fb47a6/stacks",
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(json_data))

@@ -54,7 +54,10 @@
             "chpasswd": {
               "list": "root:1111\nbong:2222\nhun:3333\n",
               "expired": false
-            }
+            },
+            "packages": [
+                "httpd"
+              ]
           }
         }
       },

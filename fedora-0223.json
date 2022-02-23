@@ -1,4 +1,7 @@
 {
+    "stack_name": "centos",
+    "template": 
+{
     "heat_template_version": "2018-08-31",
     "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.\n",
     "resources": {
@@ -56,7 +59,7 @@
               "expired": false
             },
             "packages": [
-                "httpd"
+                "php"
               ]
           }
         }
@@ -155,3 +158,4 @@
       }
     }
   }
+}

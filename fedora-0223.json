@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "stack_name": "fedora-1",
   "template": 
+=======
+    "stack_name": "centos",
+    "template": 
+>>>>>>> 8cf77402cc268f8c15dde63c0cb5c796878b5539
 {
     "heat_template_version": "2018-08-31",
     "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.\n",
@@ -57,7 +62,14 @@
             "chpasswd": {
               "list": "root:1111\nbong:2222\nhun:3333\n",
               "expired": false
+<<<<<<< HEAD
             }
+=======
+            },
+            "packages": [
+                "php"
+              ]
+>>>>>>> 8cf77402cc268f8c15dde63c0cb5c796878b5539
           }
         }
       },

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a55907da-9a15-4170-baec-5312248be1b5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/centos.json" beforeDir="false" afterPath="$PROJECT_DIR$/centos.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/centos.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/centos.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex1.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex2.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex3_youtubesummit.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex3_youtubesummit.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex4_summit_extension.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex4_summit_extension.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex5_api_ver.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex5_api_ver.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex6_public_net.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex6_public_net.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex7_private_net_api_ver.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ex7_private_net_api_ver.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fedora-0223.json" beforeDir="false" afterPath="$PROJECT_DIR$/fedora-0223.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fedora.json" beforeDir="false" afterPath="$PROJECT_DIR$/fedora.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fedora.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/fedora.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsontest.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsontest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.json" beforeDir="false" afterPath="$PROJECT_DIR$/main.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memo.py" beforeDir="false" afterPath="$PROJECT_DIR$/memo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/test.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/test2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ubuntu.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ubuntu.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="26Xhcm0DwlqLXwQ51fwfqchsYWA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a55907da-9a15-4170-baec-5312248be1b5" name="Changes" comment="" />
+      <created>1647575922637</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647575922637</updated>
+      <workItem from="1647575925411" duration="99000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

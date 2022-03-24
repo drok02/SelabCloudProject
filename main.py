@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
 
-address = "192.168.0.48"
+address = "192.168.0.54"
 # 토큰 받아오기
 class AccountView():
     def token(self):

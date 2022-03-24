@@ -5,8 +5,9 @@ import requests
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
+import pandas as pd
 
-address = "10.125.70.26"
+address = "192.168.0.48"
 # 토큰 받아오기
 class AccountView():
     def token(self):
@@ -44,21 +45,36 @@ class AccountView():
 
     def create_stack(self):
         admin_token= self.token()
-        system_num=int(input("원하는 시스템 번호를 입력: 1.Ubuntu 2.CentOS 3.Fedora\n"))
+        system_num=int(input("원하는 시스템 번호를 입력: 1.강의시스템 2.웹서버 \n"))
+        memberFile=pd.read_csv('test_csv_file.csv')
+        for i in range(memberFile.shape[0]):
+            id, name, passwd = memberFile.loc[i]
+        softInfo=['vim','filezilla','ftp','default-jdk','synaptic']
+        softNum = list(map(int, input("원하는 소프트웨어 번호를 입력: 1.vim 2.filezilla 3.ftp 4.default-jdk 5.synaptic  입력예시: 1 3 4\n").split()))
+
         # stack_name= input("stack 이름 입력 : ")
         # key_name= input("key 이름 입력 : ")
         # server_name= input("server 이름 입력 : ") 
         # num_user=int(input("사용자 수 입력: ")) 
+        osList=['ubuntu.json','centos']
+        # with open(osList[system_num-1], 'w') as f:
+        #     json_data = json.load(f)
+        # print(osList[system_num-1])
+        with open('ubuntu.json', 'r') as f:
+            json_data = json.load(f)
+        for i in softNum:
+            json_data['template']['resources']['myconfig']['properties']['cloud_config']['packages'].append(softInfo[i - 1])
+        print(json_data['template']['resources']['myconfig']['properties']['cloud_config']['packages'])
 
-        if(system_num==1):
-            with open('main.json','r') as f:
-                json_data=json.load(f)
-        elif(system_num==2):
-            with open('centos.json','r') as f:
-                json_data=json.load(f)
-        elif(system_num==3):
-            with open('fedora-0223.json','r') as f:
-                json_data=json.load(f)
+        # if(system_num==1):
+        #     with open('ubuntu.json','r') as f:
+        #         json_data=json.load(f)
+        # elif(system_num==2):
+        #     with open('centos.json','r') as f:
+        #         json_data=json.load(f)
+        # elif(system_num==3):
+        #     with open('fedora-0223.json','r') as f:
+        #         json_data=json.load(f)
         # json_data['stack_name']=stack_name
         # json_data['template']['resources']['demo_key']['properties']['name']=key_name
         # json_data['template']['resources']['mybox']['properties']['name']=server_name
@@ -75,7 +91,7 @@ class AccountView():
 
 def main():
     f=AccountView()
-    f.token()
+    f.create_stack()
 
 
 main()

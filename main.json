@@ -8,7 +8,7 @@
             "mybox": {
                 "type": "OS::Nova::Server",
                 "properties": {
-                "name": "server1",
+                "name": "server2_0324",
                 "flavor": "ds512M",
                 "image": "ubuntu",
                 "key_name": {
@@ -64,7 +64,7 @@
             "demo_key": {
                 "type": "OS::Nova::KeyPair",
                 "properties": {
-                "name": "testkey"
+                "name": "testkey0324"
                 }
             },
             "mybox_management_port": {

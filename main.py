@@ -66,7 +66,7 @@ class AccountView():
         #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['users'].append("%d"%(i))
         #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['chpasswd']["list"].append("%d:%d%d%d%d"%(i,i,i,i,i))
 
-            
+        perpose= int(input("구축 목적 입력 : 1. 강의시스템 구축 2. 웹서버 구축 "))            
         user_res = requests.post("http://"+address+"/heat-api/v1/6afe05fbd2cb47a6b149ee3541fb47a6/stacks",
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(json_data))

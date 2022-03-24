@@ -9,7 +9,7 @@ import sys
 address = "10.125.70.26"
 # 토큰 받아오기
 class AccountView():
-    def token():
+    def token(self):
         # data2 = json.loads(request.body)
         # Admin으로 Token 발급 Body
         token_payload = {
@@ -42,8 +42,8 @@ class AccountView():
         return admin_token
 
 
-    def create_stack():
-        admin_token= AccountView.token()
+    def create_stack(self):
+        admin_token= self.token()
         system_num=int(input("원하는 시스템 번호를 입력: 1.Ubuntu 2.CentOS 3.Fedora\n"))
         # stack_name= input("stack 이름 입력 : ")
         # key_name= input("key 이름 입력 : ")
@@ -72,8 +72,10 @@ class AccountView():
             data = json.dumps(json_data))
         print("stack생성 ",user_res)
 
+
 def main():
-     f=AccountView.create_stack()
+    f=AccountView()
+    f.token()
 
 
 main()

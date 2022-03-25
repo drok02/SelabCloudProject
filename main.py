@@ -52,35 +52,16 @@ class AccountView():
         softInfo=['vim','filezilla','ftp','default-jdk','synaptic']
         softNum = list(map(int, input("원하는 소프트웨어 번호를 입력: 1.vim 2.filezilla 3.ftp 4.default-jdk 5.synaptic  입력예시: 1 3 4\n").split()))
 
-        # stack_name= input("stack 이름 입력 : ")
-        # key_name= input("key 이름 입력 : ")
-        # server_name= input("server 이름 입력 : ") 
-        # num_user=int(input("사용자 수 입력: ")) 
-        osList=['ubuntu.json','centos']
-        # with open(osList[system_num-1], 'w') as f:
-        #     json_data = json.load(f)
-        # print(osList[system_num-1])
-        with open('ubuntu.json', 'r') as f:
+
+        osList=['ubuntu.json','centos.json','fedora.json']
+        with open(osList[system_num-1], 'r') as f:
+
             json_data = json.load(f)
         for i in softNum:
             json_data['template']['resources']['myconfig']['properties']['cloud_config']['packages'].append(softInfo[i - 1])
         print(json_data['template']['resources']['myconfig']['properties']['cloud_config']['packages'])
 
-        # if(system_num==1):
-        #     with open('ubuntu.json','r') as f:
-        #         json_data=json.load(f)
-        # elif(system_num==2):
-        #     with open('centos.json','r') as f:
-        #         json_data=json.load(f)
-        # elif(system_num==3):
-        #     with open('fedora-0223.json','r') as f:
-        #         json_data=json.load(f)
-        # json_data['stack_name']=stack_name
-        # json_data['template']['resources']['demo_key']['properties']['name']=key_name
-        # json_data['template']['resources']['mybox']['properties']['name']=server_name
-        # for i in range(num_user):
-        #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['users'].append("%d"%(i))
-        #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['chpasswd']["list"].append("%d:%d%d%d%d"%(i,i,i,i,i))
+
 
             
         user_res = requests.post("http://"+address+"/heat-api/v1/6afe05fbd2cb47a6b149ee3541fb47a6/stacks",

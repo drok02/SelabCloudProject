@@ -62,7 +62,7 @@ resources:
   server_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
-      floating_network_id: "4a1fd1b1-d13a-4ef2-83f1-95d45eebdb23"
+      floating_network_id: "067bb553-fa93-4809-8d38-7ed74c700194"
       port_id: { get_resource: mybox_management_port }
 
   mynet:
@@ -104,7 +104,7 @@ resources:
     type: OS::Neutron::RouterGateway
     properties:
       router_id: {get_resource: router}
-      network_id: "4a1fd1b1-d13a-4ef2-83f1-95d45eebdb23"
+      network_id: "067bb553-fa93-4809-8d38-7ed74c700194"
 
   router_interface:
     type: OS::Neutron::RouterInterface

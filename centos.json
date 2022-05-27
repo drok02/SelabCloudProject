@@ -10,7 +10,7 @@
         "properties": {
           "name": "mybox_summitExtension",
           "flavor": "m1.small",
-          "image": "centos",
+          "image": "cirros-0.4.0-x86_64-disk",
           "key_name": {
             "get_resource": "demo_key"
           },
@@ -86,7 +86,7 @@
       "server_floating_ip": {
         "type": "OS::Neutron::FloatingIP",
         "properties": {
-          "floating_network_id": "0ac64fe1-5cb3-4c9e-af4b-e5f679373458",
+          "floating_network_id": "4a1e754d-590f-4473-a8e7-dc230021007d",
           "port_id": {
             "get_resource": "mybox_management_port"
           }
@@ -142,7 +142,7 @@
           "router_id": {
             "get_resource": "router"
           },
-          "network_id": "0ac64fe1-5cb3-4c9e-af4b-e5f679373458"
+          "network_id": "4a1e754d-590f-4473-a8e7-dc230021007d"
         }
       },
       "router_interface": {

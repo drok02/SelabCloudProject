@@ -2,13 +2,13 @@
                                 
     "stack_name": "stack1",
     "template": {
-        "heat_template_version": "2021-04-16",
+        "heat_template_version": "2018-08-31",
         "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
         "resources": {
             "mybox": {
                 "type": "OS::Nova::Server",
                 "properties": {
-                "name": "server2_0324",
+                "name": "server_0526",
                 "flavor": "ds512M",
                 "image": "ubuntu",
                 "key_name": {
@@ -83,7 +83,7 @@
             "server_floating_ip": {
                 "type": "OS::Neutron::FloatingIP",
                 "properties": {
-                "floating_network_id": "4a1fd1b1-d13a-4ef2-83f1-95d45eebdb23",
+                "floating_network_id": "4a1e754d-590f-4473-a8e7-dc230021007d",
                 "port_id": {
                     "get_resource": "mybox_management_port"
                 }
@@ -139,7 +139,7 @@
                     "router_id": {
                         "get_resource": "router"
                     },
-                    "network_id": "4a1fd1b1-d13a-4ef2-83f1-95d45eebdb23"
+                    "network_id": "4a1e754d-590f-4473-a8e7-dc230021007d"
                 }
             },
             "router_interface": {

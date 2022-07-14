@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
 
-address = "192.168.0.81"
+address = "192.168.0.107"
 tenet_id = "befce16c8c784857acbb4ae98ec7af45"
 # 토큰 받아오기
 class AccountView():

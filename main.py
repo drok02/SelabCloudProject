@@ -7,10 +7,16 @@ from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
 
-address = "192.168.0.107"
+address = "192.168.0.118"
 tenet_id = "befce16c8c784857acbb4ae98ec7af45"
 # 토큰 받아오기
 class AccountView():
+    def Request(self,apiURL, jsonData):
+        auth_res = requests.post("http://"+address+apiURL,
+            headers = {'content-type' : 'application/json'},
+            data = json.dumps(jsonData))
+        return auth_res
+
     def token(self):
         # data2 = json.loads(request.body)
         # Admin으로 Token 발급 Body
@@ -34,13 +40,14 @@ class AccountView():
         }  
 
         # Openstack keystone token 발급
-        auth_res = requests.post("http://"+address+"/identity/v3/auth/tokens",
-            headers = {'content-type' : 'application/json'},
-            data = json.dumps(token_payload))
-
+        # auth_res = requests.post("http://"+address+"/identity/v3/auth/tokens",
+        #     headers = {'content-type' : 'application/json'},
+        #     data = json.dumps(token_payload))
+        url="/identity/v3/auth/tokens"
+        auth_res=self.Request(url,token_payload)
         #발급받은 token 출력
         admin_token = auth_res.headers["X-Subject-Token"]
-        print("token",admin_token)
+        print("token : \n",admin_token)
         return admin_token
 
 
@@ -77,7 +84,7 @@ class AccountView():
 
 def main():
     f=AccountView()
-    f.create_stack()
+    f.token()
 
 
 main()

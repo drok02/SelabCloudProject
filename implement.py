@@ -131,10 +131,10 @@ class AccountView():
     def create_img_from_server(self,instacne_name,image_name):
         admin_token= self.token()
         
-        instance_uuid=requests.get("http://"+address+"/compute/v2.1/servers/detail?"+instacne_name,
+        instance_uuid=requests.get("http://"+address+"/compute/v2.1/servers?"+instacne_name,
             headers = {'X-Auth-Token' : admin_token}
             ).json()["servers"][0]["id"]
-
+        print("instance uuid is : \n",instance_uuid)
         openstack_img_payload = {
                 "createImage" : {
                     "name" : image_name
@@ -149,7 +149,11 @@ class AccountView():
 
 def main():
     f=AccountView()
-    f.create_img_from_server("test_imple","test_image")
-
-
+    # f.create_instance()
+    f.create_img_from_server("instance_test","image_test")
+    # admin_token = f.token()
+    # user_res = requests.get("http://192.168.0.118/image/v2/images/f1adcd57-0edf-47df-afc0-b253a82af441/file?X-Auth-Token="+admin_token
+        
+    # )
+    # print("image file response is : \n ",user_res)  
 main()

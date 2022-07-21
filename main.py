@@ -6,9 +6,9 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
-
+import time
 address = "192.168.0.118"
-tenet_id = "befce16c8c784857acbb4ae98ec7af45"
+tenet_id = "91d317f465b84ed2bc9f123eac5f8b07"
 # 토큰 받아오기
 class AccountView():
     def Request(self,apiURL, jsonData):
@@ -52,12 +52,12 @@ class AccountView():
 
 
     def create_stack(self):
+        start = time.time()
         admin_token= self.token()
-        system_num=int(input("원하는 시스템 번호를 입력: 1.Ubuntu 2.CentOS 3.Fedora\n"))
-        # stack_name= input("stack 이름 입력 : ")
-        # key_name= input("key 이름 입력 : ")
-        # server_name=1 input("server 이름 입력 : ") 
-        # num_user=int(input("사용자 수 입력: ")) 
+        system_num=int(input("원하는 시스템 입력: 1.Ubuntu 2.CentOS 3.Fedora\n"))
+        stack_name= int(input("Flavor 선택 : 1. m1.nano 2. m1.small 3. m1.medium 4. m1.large\n"))
+        key_name= int(input("네트워크 입력 : 1. public 2. private 3. shared\n"))
+        server_name=int(input("SW 입력 : 1. apache2 2. pwgen 3. libguestfs-tools 4. pastebinit\n")) 
 
         if(system_num==1):
             with open('main.json','r') as f:
@@ -68,23 +68,18 @@ class AccountView():
         elif(system_num==3):
             with open('fedora-0223.json','r') as f:
                 json_data=json.load(f)
-        # json_data['stack_name']=stack_name
-        # json_data['template']['resources']['demo_key']['properties']['name']=key_name
-        # json_data['template']['resources']['mybox']['properties']['name']=server_name
-        # for i in range(num_user):
-        #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['users'].append("%d"%(i))
-        #     json_data['template']['resources']['myconfig']['properties']['cloud_config']['chpasswd']["list"].append("%d:%d%d%d%d"%(i,i,i,i,i))
-        
+     
             #address heat-api v1 프로젝트 id stacks
         user_res = requests.post("http://"+address+"/heat-api/v1/"+tenet_id+"/stacks",
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(json_data))
         print("stack생성 ",user_res)
-
+        end = time.time()
+        print("종래 시스템의 오케스트레이션 가상환경 생성 시간 : ", end-start)
 
 def main():
     f=AccountView()
-    f.token()
+    f.create_stack()
 
 
 main()

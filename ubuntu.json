@@ -1,5 +1,5 @@
 {
-    "stack_name": "system_test",
+    "stack_name": "virtual_machine_test",
     "template":
     {
     "heat_template_version": "2021-04-16",
@@ -8,7 +8,7 @@
       "mybox": {
         "type": "OS::Nova::Server",
         "properties": {
-          "name": "server_0401",
+          "name": "VM_test",
           "flavor": "ds512M",
           "image": "ubuntu",
           "key_name": {
@@ -36,15 +36,26 @@
             "users": [
               "default",
               {
-                "name": "user1"
+                "name": "bong",
+                "shell": "/bin/bash",
+                "sudo": "ALL=(ALL) NOPASSWD:ALL"
               },
               {
-                "name": "user2"
+                "name": "hun"
               }
             ],
             "ssh_pwauth": true,
+            "write_files": [
+              {
+                "path": "/tmp/one",
+                "content": "The one is bar"
+              }
+            ],
+            "bootcmd": [
+              "mkdir /home/ubuntu"
+            ],
             "chpasswd": {
-              "list": "root:1111\nuser1:1111\nuser2:2222\n",
+              "list": "root:1111\nbong:2222\nhun:3333\n",
               "expired": false
             },
             "packages": [
@@ -60,7 +71,7 @@
       "demo_key": {
         "type": "OS::Nova::KeyPair",
         "properties": {
-          "name": "testkey_0401"
+          "name": "testkey3_0324"
         }
       },
       "mybox_management_port": {

@@ -31,32 +31,8 @@
                 "type": "OS::Heat::CloudConfig",
                 "properties": {
                 "cloud_config": {
-                    "package_update": "true",
-                    "package_upgrade": "true",
-                    "users": [
-                    "default","bong","hun"      
-                    ],
-                    "ssh_pwauth": "true",
-                    "write_files": [
-                    {
-                        "path": "/tmp/one",
-                        "content": "The one is bar"
-                    }
-                    ],
-                    "bootcmd": [
-                    "mkdir /home/ubuntu/bong"
-                    ],
-                    "chpasswd": {
-                        "list": ["root:1111","bong:2222","hun:0000"],
-                        "expired": "false"
-                    },
-                    "manage_home_ubuntu": "false",
                     "packages": [
-                    "apache2",
-                    "net-tools",
-                    "pwgen",
-                    "pastebinit",
-                    "default-jdk"
+                    "vim"
                     ]
                 }
                 }

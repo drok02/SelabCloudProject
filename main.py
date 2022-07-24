@@ -52,6 +52,7 @@ class AccountView():
 
 
     def create_stack(self):
+        
         start = time.time()
         admin_token= self.token()
         system_num=int(input("원하는 시스템 입력: 1.Ubuntu 2.CentOS 3.Fedora\n"))

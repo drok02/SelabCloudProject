@@ -1,6 +1,6 @@
 {
                                 
-    "stack_name": "existing_System",
+    "stack_name": "VM_Orchetration_test",
     "template": {
         "heat_template_version": "2018-08-31",
         "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
@@ -8,7 +8,7 @@
             "mybox": {
                 "type": "OS::Nova::Server",
                 "properties": {
-                "name": "VM_of_Existing_system",
+                "name": "VM_of_Orchestration_test",
                 "flavor": "ds512M",
                 "image": "ubuntu",
                 "key_name": {
@@ -56,7 +56,7 @@
                     "net-tools",
                     "pwgen",
                     "pastebinit",
-                    "libguestfs-tools"
+                    "default-jdk"
                     ]
                 }
                 }

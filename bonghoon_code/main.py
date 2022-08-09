@@ -7,8 +7,8 @@ from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
 
-address = "192.168.0.118"
-tenet_id = "befce16c8c784857acbb4ae98ec7af45"
+address = "192.168.0.118"   #Not fixed
+tenet_id = "befce16c8c784857acbb4ae98ec7af45"   #Not fixed
 # 토큰 받아오기
 class AccountView():
     def Request(self,apiURL, jsonData):
@@ -20,7 +20,7 @@ class AccountView():
     def token(self):
         # data2 = json.loads(request.body)
         # Admin으로 Token 발급 Body
-        token_payload = {
+        token_payload = {   #identity API format
             "auth": {
                 "identity": {
                     "methods": [

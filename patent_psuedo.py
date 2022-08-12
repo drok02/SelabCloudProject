@@ -58,7 +58,7 @@ class AccountView():
         OS_SW_id=system[system_num-1][SW_num-1]
         data_id=Data[Data_num-1]
         
-        #스냅샷 생성 템플릿 생성
+        # 스냅샷 템플릿 생성
         with open('patent_volume_snapshot.json','r') as f:
             json_data=json.load(f)
 
@@ -68,23 +68,19 @@ class AccountView():
         json_DataPool=copy.deepcopy(json_data)
         json_DataPool['snapshot']['volume_id']=data_id
        
-        #볼륨 -> 스냅샷 생성
+        # 볼륨 -> 스냅샷 생성
 
-        # 1. SW 리소스의 snapshot 생성
-        user_res_OS_SW = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/snapshots",
+        # SW 리소스의 snapshot 생성
+        user_snap_OS_SW = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/snapshots",
             headers = {'Content-Type': 'application/json', 'X-Auth-Token' : admin_token},
             data = json.dumps(json_data))
-        snap_uuid=user_res_OS_SW.json()['snapshot']['id']
+        snap_uuid=user_snap_OS_SW.json()['snapshot']['id']
 
-        # 2. DataPool 리소스의 snapshot 생성
-        user_res_DataPool = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/snapshots",
+        # DataPool 리소스의 snapshot 생성
+        user_snap_DataPool = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/snapshots",
             headers = {'Content-Type': 'application/json', 'X-Auth-Token' : admin_token},
             data = json.dumps(json_DataPool))
-        snap_uuid_datapool=user_res_DataPool.json()['snapshot']['id']
-
-        print("OS_SW 스냅샷 생성 : ",user_res_OS_SW)
-        print("데이터풀 스냅샷 생성 : ",user_res_DataPool)
-
+        snap_uuid_datapool=user_snap_DataPool.json()['snapshot']['id']
 
         # Wait until snapshot status available
         while True :
@@ -110,23 +106,21 @@ class AccountView():
         json_data_vol_data=copy.deepcopy(json_data_vol)
         json_data_vol_data['volume']['snapshot_id']=snap_uuid_datapool
         # 생성 요청
-        user_res1 = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/volumes",
+        user_vol_OSSW = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/volumes",
             headers = {'Content-Type': 'application/json','X-Auth-Token' : admin_token},
             data = json.dumps(json_data_vol))
-        print("OS_SW Volume 생성 : ",user_res1)
-        Volume_snap_uuid=user_res1.json()['volume']['id']
-        user_res1_data = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/volumes",
+        Volume_uuid_sw=user_vol_OSSW.json()['volume']['id']
+
+        user_vol_data = requests.post("http://"+address+"/volume/v3/"+tenet_id+"/volumes",
             headers = {'Content-Type': 'application/json','X-Auth-Token' : admin_token},
             data = json.dumps(json_data_vol_data))
-        print("데이터풀 Volume생성 : ",user_res1_data)
-        Volume_snap_uuid_data=user_res1_data.json()['volume']['id']
-        
-        
+        Volume_uuid_data=user_vol_data.json()['volume']['id']
+    
         # Wait until Volume status available
         while True :
-            volume_status=requests.get("http://"+address+"/volume/v3/"+tenet_id+"/volumes/detail?id="+Volume_snap_uuid,
+            volume_status=requests.get("http://"+address+"/volume/v3/"+tenet_id+"/volumes/detail?id="+Volume_uuid_sw,
                 headers = {'Content-Type': 'application/json','X-Auth-Token' : admin_token}).json()['volumes'][0]['status']
-            volume_status_data=requests.get("http://"+address+"/volume/v3/"+tenet_id+"/volumes/detail?id="+Volume_snap_uuid_data,
+            volume_status_data=requests.get("http://"+address+"/volume/v3/"+tenet_id+"/volumes/detail?id="+Volume_uuid_data,
                 headers = {'Content-Type': 'application/json','X-Auth-Token' : admin_token}).json()['volumes'][0]['status']
             # print("SnapShot status : ",volume_status, volume_status_data)
             if volume_status=="available" and volume_status_data=="available": break
@@ -139,19 +133,19 @@ class AccountView():
                     sleep(0.5)
 
 
-        # 가상환경 Create 템플릿_Volume 항목 
+        # 가상환경_Volume 항목 템플릿 생성
         with open('patent_block_device.json','r') as f:
             json_data_block=json.load(f)
-        
+
         # OS_SW Volume 템플릿 작성
-        json_data_block['uuid']=Volume_snap_uuid
-        
+        json_data_block['uuid']=Volume_uuid_sw
+
         # DataPool 템플릿 작성
         json_data_block_Datapool = copy.deepcopy(json_data_block)
-        json_data_block_Datapool["uuid"]=Volume_snap_uuid_data
+        json_data_block_Datapool["uuid"]=Volume_uuid_data
         json_data_block_Datapool["boot_index"]=1
 
-        # 가상환경 Create 템플릿 생성
+        # 가상환경 Create 템플릿 생성      
         with open('patent_payload.json','r') as f:
             json_data_VM=json.load(f)
         # OS_SW,DataPool Volume 추가
@@ -162,11 +156,8 @@ class AccountView():
         res_instance = requests.post("http://"+address+"/compute/v2.1/servers",
             headers = {'Content-Type': 'application/json','X-Auth-Token' : admin_token},
             data = json.dumps(json_data_VM))
-        print("Instance 생성 : ",res_instance)
-        end = time.time()
-        print("제안 시스템의 가상환경 구축 시간 : ", end-start)
 
-
+        res_instance
 def main():
     f=AccountView()
     f.create_server_from_volume()

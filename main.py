@@ -77,7 +77,12 @@ class AccountView():
         print("stack생성 ",user_res)
         end = time.time()
         print("종래 시스템의 오케스트레이션 가상환경 생성 시간 : ", end-start)
-
+        
+        
+        
+        stack_name
+        key_name
+        server_name
 def main():
     f=AccountView()
     f.create_stack()

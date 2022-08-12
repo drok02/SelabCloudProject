@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from re import sub
 from django.shortcuts import render
 import json
 import yaml
@@ -7,9 +8,10 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 import sys
 import pandas as pd
+import subprocess
 
 address = "192.168.0.118"
-tenet_id = "91d317f465b84ed2bc9f123eac5f8b07"
+tenet_id = "30ea542f8d2740459116a43ffa82eb3f"
 
 class AccountView():
  
@@ -40,7 +42,6 @@ class AccountView():
         auth_res = requests.post("http://"+address+"/identity/v3/auth/tokens",
             headers = {'content-type' : 'application/json'},
             data = json.dumps(token_payload))
- 
         #발급받은 token 출력
         admin_token = auth_res.headers["X-Subject-Token"]
         print("token : \n",admin_token)
@@ -113,7 +114,7 @@ class AccountView():
             data = json.dumps(json_data))
         print("stack생성 ",user_res)
 
-    # 인스턴스 백업 데이터 추출
+    # 인스턴스 백업 데이터(id)추출
     def extract_backup(self, name):
         admin_token= self.token()
 
@@ -134,7 +135,9 @@ class AccountView():
         instance_uuid=requests.get("http://"+address+"/compute/v2.1/servers?"+instacne_name,
             headers = {'X-Auth-Token' : admin_token}
             ).json()["servers"][0]["id"]
-        print("instance uuid is : \n",instance_uuid)
+
+        # print("instance uuid is : \n",instance_uuid)
+
         openstack_img_payload = {
                 "createImage" : {
                     "name" : image_name
@@ -145,15 +148,31 @@ class AccountView():
             headers = {'X-Auth-Token' : admin_token},
             data = json.dumps(openstack_img_payload))
 
-        print("인스턴스로부터 이미지 생성 ",user_res)    
+        print("인스턴스로부터 이미지 생성 ",user_res)
+
+    def Down_bin_image(self):
+        admin_token= self.token()
+        res= requests.get("http://"+address+"/image/v2/images?"+"0eb01803-788f-4461-aea5-737050c05148"+"/file",
+            headers = {'X-Auth-Token' : admin_token}
+            ).content
+
+        print("이미지 바이너리 포맷 다운로드 결과 : ",res)
+        # temp = subprocess.call("curl -i -X GET -H \"X-Auth-Token: gAAAAABi8qbZ8QNCfPT4gt93Hru1v9vfcYA2mvTLfsYERP7L6cG9-pKBiFJGBU2Re5V94ynNPj_odQmLTNwSzxqFLx8VjnCVkCHrokGHJVtYAZGwQizxH0CfZWlLZFEYaomR8G6R2go0bUZda7kc1aYvCt3ACdpIJI_AN6JvYqyE7jQ-dZRFlMI\" http://192.168.0.118/image/v2/images/0eb01803-788f-4461-aea5-737050c05148/file")
+        # print(temp)
+        
+        # f = open('C:/Users/PC/Desktop/os_image/backup/backup_img_file','w')
+        # f.write(temp)
+        # f.close
 
 def main():
     f=AccountView()
     # f.create_instance()
-    f.create_img_from_server("instance_test","image_test")
-    # admin_token = f.token()
-    # user_res = requests.get("http://192.168.0.118/image/v2/images/f1adcd57-0edf-47df-afc0-b253a82af441/file?X-Auth-Token="+admin_token
-        
-    # )
-    # print("image file response is : \n ",user_res)  
+    # f.create_img_from_server("ubuntu_backup_test","image_backup_test")
+    admin_token = f.token()
+    user_res = requests.get("http://192.168.0.118/image/v2/images/0eb01803-788f-4461-aea5-737050c05148/file",
+     headers={'X-Auth-Token' : admin_token})
+    print("image file response is : \n ",user_res)  
+    f = open('C:/Users/PC/Desktop/os_image/backup/backup_img_file.qcow2','wb')
+    f.write(user_res.content)
+    f.close
 main()

@@ -1,7 +1,7 @@
 {
     "snapshot": {
-        "name": "snap-001",
-        "volume_id": "ba2211d6-33e6-4bc4-af3f-c03d28727f17",
+        "name": "snap",
+        "volume_id": "",
         "force": true
     }
 }

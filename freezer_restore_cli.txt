@@ -1,0 +1,2 @@
+source /opt/stack/devstack/admin-openrc.sh
+freezer-agent --action restore --nova-inst-id 4aff323c-089a-4f1d-a95f-fd045172e222 --storage local --container /home/test/backup0812_7 --backup-name backup0812_file_7 --mode nova --engine nova --no-incremental true --log-file /home/test/restore/restore0812_7.log

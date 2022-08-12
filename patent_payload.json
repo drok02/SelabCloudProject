@@ -1,11 +1,26 @@
 {
     "server" : {
-        "name" : "hun_instance",
+        "name" : "Proposed_System_VE",
         "imageRef" : "f1adcd57-0edf-47df-afc0-b253a82af441",
         "flavorRef" : "d3",
         "networks" : [{
             "uuid" : "8d73ffc7-5336-4f31-afd3-11035388a3de"
         }],
-        "block_device_mapping_v2": [] 
+        "block_device_mapping_v2": [
+            {
+                "boot_index": "0",
+                "uuid": "9409d40a-e4e0-491b-8a6e-baa36894cbe9",
+                "source_type": "volume",
+                "volume_size": "5",
+                "destination_type": "volume"
+            },
+            {
+                "boot_index": "1",
+                "uuid": "68e4e1ba-56f4-4b72-9527-013fbc32fe37",
+                "source_type": "volume",
+                "volume_size": "5",
+                "destination_type": "volume"
+            }
+        ] 
     }
 }

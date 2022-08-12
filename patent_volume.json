@@ -1,8 +1,8 @@
 {
     "volume": {
-        "name": "Volume_Name_2",
+        "name": "Volume",
         "description": "This Volume is for test Patent",
         "size": 5,
-        "snapshot_id": "7989b466-c4cf-447a-9925-ebcd8c17d13c"
+        "snapshot_id": ""
     }
 }

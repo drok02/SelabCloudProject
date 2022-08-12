@@ -1,6 +1,6 @@
 {
                                 
-    "stack_name": "VM_Orchetration_test",
+    "stack_name": "Conventional_System_VE",
     "template": {
         "heat_template_version": "2018-08-31",
         "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",

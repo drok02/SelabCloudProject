@@ -1,18 +1,6 @@
-from asyncio.windows_events import NULL
-from http import server
-from re import sub
-from django.shortcuts import render
 import json
-import yaml
 import requests
-from django.views import View
-from django.http import HttpResponse, JsonResponse
-import sys
-import pandas as pd
-import subprocess
 import paramiko
-import getpass
-import time 
 
 address = "192.168.0.118"
 tenet_id = "30ea542f8d2740459116a43ffa82eb3f"
@@ -84,10 +72,7 @@ class AccountView():
         cli.connect(server, port=22, username=user, password=pwd)
 
 
-        # # 3 try
-
-
-
+        # # 3 try 
         commandLines = self.readTxtFile("./freezercli") # 메모장 파일에 적어놨던 명령어 텍스트 읽어옴
         print(commandLines)
 
@@ -169,6 +154,7 @@ class AccountView():
         
 def main():
     f=AccountView()
+    f.token()
     # f.create_instance()
     # f.create_img_from_server("ubuntu_backup_test","image_backup_test")
     # admin_token = f.token()
@@ -178,5 +164,5 @@ def main():
     # f = open('C:/Users/PC/Desktop/os_image/backup/backup_img_file.qcow2','wb')
     # f.write(user_res.content)
     # f.close
-    f.restore()
+    # f.restore()
 main()

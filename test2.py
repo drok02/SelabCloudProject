@@ -1,10 +1,8 @@
-from django.shortcuts import render
 import json
-import yaml
 import requests
-from django.views import View
-from django.http import HttpResponse, JsonResponse
 import sys
+import os
+import subprocess
 
 address = "10.125.70.26"
 # 토큰 받아오기
@@ -277,6 +275,7 @@ class AccountView():
         print(json.dumps(json_data))
         return json.dumps(json_data)        
 def main():
+    subprocess.call('ls', shell=True)
     # d= AccountView.token()
     # c=AccountView.create_user()
     # f= AccountView.delete_user()
@@ -285,11 +284,12 @@ def main():
     # f=AccountView.create_snapshot()
     # f=AccountView.create_vol()
     # f=AccountView.create_flavor()
-     f=AccountView.create_stack()
+    #  f=AccountView.create_stack()
     #   f=AccountView.create_stack_yaml()
         # f=AccountView.loader()
     # f=AccountView.jsonprint()
     # print(f)
+
 main()
 #         #openstack 사용자 생성
 #         user_res = requests.token("http://"+address+"/identity/v3/users",

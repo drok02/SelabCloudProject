@@ -1,0 +1,38 @@
+{
+                                
+    "stack_name": "VE",
+    "template": {
+        "heat_template_version": "2018-08-31",
+        "description": "This template demonstrates the different ways configuration resources can be used to specify boot-time cloud-init configuration.",
+        "resources": {
+            "mybox": {
+                "type": "OS::Nova::Server",
+                "properties": {
+                "name": "VM_of_Orchestration_test2",
+                "flavor": "d1",
+                "networks": [
+                    {
+                    "port": {
+                        "get_resource": "mybox_management_port"
+                    }
+                    }
+                ],
+                "block_device_mapping_v2": [
+                    {
+                        "boot_index":"0",
+                        "device_name": "voltest",
+                        "volume_id":"d20f2b61-7f6d-4395-8fb1-cb5d029086a1"
+                    }
+                ]
+                }
+            },
+            "mybox_management_port": {
+                "type": "OS::Neutron::Port",
+                "properties": {
+                "network_id": "36c81b78-8f43-4b31-bf8b-af3fb9f21b95"
+                }
+            }
+            
+        }
+    }
+}
